@@ -1,4 +1,4 @@
-package com.ChallengesFerGomez.LiterAluraChallenge.Models;
+package com.ChallengesFerGomez.LiterAluraChallenge.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class LibrosListaResponse {
+public class BookList {
 
     private int count;
     private String next;   // Siguiente página
@@ -50,7 +50,7 @@ public class LibrosListaResponse {
 
     @Override
     public String toString() {
-        return "LibrosListaResponse{" +
+        return "BookList{" +
                 "count=" + count +
                 ", next='" + next + '\'' +
                 ", previous='" + previous + '\'' +

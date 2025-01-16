@@ -1,4 +1,4 @@
-package com.ChallengesFerGomez.LiterAluraChallenge.Service;
+package com.ChallengesFerGomez.LiterAluraChallenge.service;
 
 import java.io.IOException;
 import java.net.URI;

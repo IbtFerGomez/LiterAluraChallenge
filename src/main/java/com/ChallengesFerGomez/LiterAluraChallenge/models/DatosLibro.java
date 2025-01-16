@@ -1,4 +1,4 @@
-package com.ChallengesFerGomez.LiterAluraChallenge.Models;
+package com.ChallengesFerGomez.LiterAluraChallenge.models;
 
 import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -16,11 +16,13 @@ public record DatosLibro(
         @JsonProperty("download_count") Double numeroDeDescargas,
         @JsonAlias("subjects") List<String> temas//<array of strings>,
 ) {
+
+
     @Override
     public String toString() {
         return "Libro {" +
                 "Título='" + titulo + '\'' +
-                ", Autor(es)=" + autor +
+                ", AutorEntity(es)=" + autor +
                 ", Idiomas=" + idiomas +
                 ", Descargas=" + numeroDeDescargas +
                 ", Temas=" + temas +

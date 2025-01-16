@@ -1,6 +1,6 @@
-package com.ChallengesFerGomez.LiterAluraChallenge.Models;
+package com.ChallengesFerGomez.LiterAluraChallenge.models;
 
-import com.ChallengesFerGomez.LiterAluraChallenge.Service.IConvierteDatos;
+import com.ChallengesFerGomez.LiterAluraChallenge.service.IConvierteDatos;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 

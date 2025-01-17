@@ -1,16 +1,19 @@
 package com.ChallengesFerGomez.LiterAluraChallenge.service;
 
+import org.springframework.stereotype.Component;
+
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
-public class consumoAPI {
+@Component
+public class ConsumoAPI {
     private final HttpClient httpClient;
 
     // Constructor para inicializar el HttpClient
-    public consumoAPI() {
+    public ConsumoAPI() {
         this.httpClient = HttpClient.newHttpClient();
     }
 
@@ -25,7 +28,7 @@ public class consumoAPI {
             HttpResponse<String> response = httpClient
                     .send(request, HttpResponse.BodyHandlers.ofString());
 
-            // Verifica el estado de la respuesta
+// Verifica el estado de la respuesta
             if (response.statusCode() >= 200 && response.statusCode() < 300) {
                 return response.body(); // Retorna el cuerpo en formato JSON si es exitoso
             } else {
@@ -39,22 +42,22 @@ public class consumoAPI {
 }
 
 
-/*public class consumoAPI {
-    public String obtenerDatos(String url){
-        HttpClient client = HttpClient.newHttpClient();
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(url))
-                .build();
-        HttpResponse<String> response = null;
-        try {
-            response = client
-                    .send(request, HttpResponse.BodyHandlers.ofString());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-        String json = response.body();
-        return json;
-    }
+/*public class ConsumoAPI {
+public String obtenerDatos(String url){
+HttpClient client = HttpClient.newHttpClient();
+HttpRequest request = HttpRequest.newBuilder()
+.uri(URI.create(url))
+.build();
+HttpResponse<String> response = null;
+try {
+response = client
+.send(request, HttpResponse.BodyHandlers.ofString());
+} catch (IOException e) {
+throw new RuntimeException(e);
+} catch (InterruptedException e) {
+throw new RuntimeException(e);
+}
+String json = response.body();
+return json;
+}
 }*/

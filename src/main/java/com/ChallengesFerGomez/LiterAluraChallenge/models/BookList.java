@@ -13,7 +13,7 @@ public class BookList {
     private String previous; // Página anterior
 
     @JsonProperty("results")
-    private List<DatosLibro> libros;
+    private List<Book> libros;
 
     // Getters, Setters y ToString
     public int getCount() {
@@ -40,11 +40,11 @@ public class BookList {
         this.previous = previous;
     }
 
-    public List<DatosLibro> getLibros() {
+    public List<Book> getLibros() {
         return libros;
     }
 
-    public void setLibros(List<DatosLibro> libros) {
+    public void setLibros(List<Book> libros) {
         this.libros = libros;
     }
 

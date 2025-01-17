@@ -8,10 +8,10 @@ import java.util.List;
 
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public record DatosLibro(
+public record Book(
         @JsonAlias("id") int id,//<number of Project Gutenberg ID>,
         @JsonAlias("title") String titulo,//<string>,
-        @JsonProperty("authors") List<DatosAutor> autor,//<array of Persons>
+        @JsonProperty("authors") List<Autor> autor,//<array of Persons>
         @JsonProperty("languages") List<String> idiomas,
         @JsonProperty("download_count") Double numeroDeDescargas,
         @JsonAlias("subjects") List<String> temas//<array of strings>,

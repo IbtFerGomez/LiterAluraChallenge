@@ -1,5 +1,6 @@
 package com.ChallengesFerGomez.LiterAluraChallenge.service;
 
+import com.ChallengesFerGomez.LiterAluraChallenge.models.Book;
 import com.ChallengesFerGomez.LiterAluraChallenge.persistence.AutorEntity;
 import com.ChallengesFerGomez.LiterAluraChallenge.persistence.BookDTO;
 import com.ChallengesFerGomez.LiterAluraChallenge.persistence.BookEntity;
@@ -59,5 +60,58 @@ public class BooksService {
                 "conteo", conteo,
                 "libros", librosPorIdioma
         );
+    }
+
+    public void saveBooksFromAPI(List<Book> booksFromAPI) {
+        booksFromAPI.forEach(book -> {
+            try {
+                AutorEntity autor = autorRepository.findByNombre(book.autor().get(0).nombre()) // Asume un solo autor
+                        .orElseGet(() -> {
+                            AutorEntity newAutor = new AutorEntity();
+                            newAutor.setNombre(book.autor().get(0).nombre());
+                            if (book.autor().get(0).fechaDeNacimiento() != null)
+                                newAutor.setAgnoNacimiento(Integer.parseInt(book.autor().get(0).fechaDeNacimiento()));
+                            if (book.autor().get(0).fechaDeMuerte() != null)
+                                newAutor.setAgnoMuerte(Integer.parseInt(book.autor().get(0).fechaDeMuerte()));
+                            return autorRepository.save(newAutor);
+                        });
+
+                BookEntity bookEntity = new BookEntity();
+                bookEntity.setTitulo(book.titulo());
+                bookEntity.setIdioma(book.idiomas().isEmpty() ? "Desconocido" : book.idiomas().get(0)); // Primer idioma
+                bookEntity.setNumeroDescargas(book.numeroDeDescargas());
+                bookEntity.setTema(book.temas() != null && !book.temas().isEmpty() ? book.temas().get(0) : "General"); // Primer tema
+                bookEntity.setAutor(autor);
+
+                bookRepository.save(bookEntity);
+            } catch (Exception e) {
+                System.err.println("Error al guardar el libro: " + book.titulo() + ". Causa: " + e.getMessage());
+            }
+        });}
+
+    public List<BookEntity> findBooksBySpanishOrEnglish() {
+        return bookRepository.findBooksBySpanishOrEnglish();
+    }
+
+    public List<BookEntity> findBooksByTema(String tema) {
+        return bookRepository.findByTema(tema);
+    }
+
+    public long countBooksByIdioma(String idioma) {
+        return bookRepository.countByIdioma(idioma);
+    }
+    // BooksService
+    public Map<String, Long> getBookCountByIdioma() {
+        List<BookEntity> allBooks = bookRepository.findAll();
+
+        return allBooks.stream()
+                .collect(Collectors.groupingBy(BookEntity::getIdioma, Collectors.counting()));
+    }
+
+    public List<AutorEntity> listarAutoresVivosEnUnAgno(int agno ) {
+        if (agno <= 0) {
+            throw new IllegalArgumentException("El año ingresado es inválido.");
+        }
+        return autorRepository.findAutoresVivosEnUnAgno(agno);
     }
 }

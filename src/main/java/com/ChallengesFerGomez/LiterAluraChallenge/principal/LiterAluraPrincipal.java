@@ -5,6 +5,7 @@ import com.ChallengesFerGomez.LiterAluraChallenge.models.Book;
 import com.ChallengesFerGomez.LiterAluraChallenge.models.BookList;
 import com.ChallengesFerGomez.LiterAluraChallenge.models.ConvierteDatos;
 import com.ChallengesFerGomez.LiterAluraChallenge.persistence.AutorDTO;
+import com.ChallengesFerGomez.LiterAluraChallenge.persistence.AutorEntity;
 import com.ChallengesFerGomez.LiterAluraChallenge.persistence.BookDTO;
 import com.ChallengesFerGomez.LiterAluraChallenge.persistence.BookEntity;
 import com.ChallengesFerGomez.LiterAluraChallenge.service.BooksService;
@@ -43,7 +44,9 @@ public class LiterAluraPrincipal {
                     5. Listar autores vivos en un año
                     6. Agregar un libro
                     7. Buscar estadísticas por idioma
-                    8. Salir
+                    8. Estadísticas globales de libros en base de datos
+                    9. Cargar libros de la API
+                    10. Salir
                     Seleccione una opción:""");
             int opcion = scanner.nextInt();
             scanner.nextLine(); // Consumir el salto de línea
@@ -56,7 +59,9 @@ public class LiterAluraPrincipal {
                 case 5 -> listarAutoresVivosEnAgno();
                 case 6 -> agregarLibro();
                 case 7 -> obtenerEstadisticasPorIdioma();
-                case 8 -> {
+                case 8 -> obtenerEstadisticasGlobales();
+                case 9 -> cargarLibrosDesdeAPI();
+                case 10 -> {
                     System.out.println("Saliendo...");
                     return;
                 }
@@ -384,6 +389,52 @@ public class LiterAluraPrincipal {
             System.out.println("Libro agregado correctamente.");
         } catch (Exception e) {
             System.out.println("Error al guardar el libro: " + e.getMessage());
+        }
+    }
+    private void obtenerEstadisticasGlobales() {
+        Map<String, Long> stats = booksService.getBookCountByIdioma();
+
+        System.out.println("\n=== Estadísticas de libros por idioma ===");
+        stats.forEach((idioma, count) ->
+                System.out.println("Idioma: " + idioma + ", Cantidad de libros: " + count));
+    }
+    private void cargarLibrosDesdeAPI() {
+        System.out.println("Cargando libros desde la API...");
+        String url = "https://gutendex.com/books/";
+        try {
+            String respuestaJson = apiCliente.obtenerDatos(url);
+            BookList bookList = convertidor.obtenerDatos(respuestaJson, BookList.class);
+            booksService.saveBooksFromAPI(bookList.getLibros());
+            System.out.println("Los libros fueron cargados y guardados correctamente.");
+        } catch (Exception e) {
+            System.out.println("Error al cargar y guardar libros desde la API: " + e.getMessage());
+        }
+    }
+    private void listarAutoresVivosEnUnAgno() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("\nIngrese el año para listar autores vivos: ");
+        int agno = scanner.nextInt();
+
+        try {
+            // Llamar al servicio para obtener los autores vivos
+            List<AutorEntity> autoresVivos = booksService.listarAutoresVivosEnUnAgno(agno);
+
+            // Verificar si la lista está vacía
+            if (autoresVivos.isEmpty()) {
+                System.out.println("No se encontraron autores vivos en el año especificado.");
+            } else {
+                System.out.println("\n=== Autores vivos en el año " + agno + " ===");
+                // Imprimir la información de cada autor encontrado
+                autoresVivos.forEach(autor ->
+                        System.out.println("Nombre: " + autor.getNombre() +
+                                ", Año de Nacimiento: " + autor.getAgnoNacimiento() +
+                                (autor.getAgnoMuerte() != null ? ", Año de Muerte: " + autor.getAgnoMuerte() : ", Aún vive"))
+                );
+            }
+        } catch (IllegalArgumentException e) {
+            System.out.println("Error: " + e.getMessage()); // Manejo de errores de datos inválidos
+        } catch (Exception e) {
+            System.out.println("Error al listar autores vivos: " + e.getMessage());
         }
     }
 }

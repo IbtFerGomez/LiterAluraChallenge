@@ -1,6 +1,7 @@
 package com.ChallengesFerGomez.LiterAluraChallenge.contorllers;
 
 import com.ChallengesFerGomez.LiterAluraChallenge.persistence.BookDTO;
+import com.ChallengesFerGomez.LiterAluraChallenge.persistence.BookEntity;
 import com.ChallengesFerGomez.LiterAluraChallenge.service.BooksService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -38,6 +39,26 @@ public class BookShelfController {
         } catch (Exception e) {
             return new ResponseEntity<>(Map.of("error", "No se pudo calcular las estadísticas"), HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+    // Buscar libros en español e inglés
+    @GetMapping("/idiomas/es-en")
+    public ResponseEntity<List<BookEntity>> getBooksBySpanishOrEnglish() {
+        List<BookEntity> libros = booksService.findBooksBySpanishOrEnglish();
+        return new ResponseEntity<>(libros, HttpStatus.OK);
+    }
+
+    // Buscar libros por tema
+    @GetMapping("/temas/{tema}")
+    public ResponseEntity<List<BookEntity>> getBooksByTema(@PathVariable String tema) {
+        List<BookEntity> libros = booksService.findBooksByTema(tema);
+        return new ResponseEntity<>(libros, HttpStatus.OK);
+    }
+
+    // Conteo de libros por idioma
+    @GetMapping("/conteo-idiomas/{idioma}")
+    public ResponseEntity<Long> getBookCountByIdioma(@PathVariable String idioma) {
+        long count = booksService.countBooksByIdioma(idioma);
+        return new ResponseEntity<>(count, HttpStatus.OK);
     }
 }
 
